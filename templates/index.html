@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Streaming</title>
+    <style>
+        #videoBox {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            /* margin-bottom: 20px; */
+            height: calc(100vh - 200px);
+            /* Adjust the space for buttons (200px) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #video {
+            max-width: 100%;
+            max-height: 100%;
+            /* margin: auto; */
+        }
+
+        #buttonRow,
+        h1 {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            /* margin: 10px; */
+            /* Adjust margin as needed */
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .boxButton {
+            width: 25%;
+            /* Each box takes half of the container width */
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            /* Include padding in width calculation */
+        }
+
+        .boxMessages {
+            width: 75%;
+            /* Each box takes half of the container width */
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            /* Include padding in width calculation */
+        }
+
+        .console {
+            width: 75%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 100px;
+            /* Fixed height */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Video Streaming</h2>
+    <div id="videoBox">
+        <img id="video" src="{{ url_for('video_feed') }}" alt="Video Stream">
+    </div>
+    <div class="container">
+        <div class="boxButton" id="buttonRow">
+            <button id="startButton" onclick="start_stop()">Start</button>
+            <button id="iExposureTimeButton" onclick="iExposureTime()">Increase Exposure</button>
+            <button id="dExposureTimeButton" onclick="dExposureTime()">Decrease Exposure</button>
+            <button id="saveImageButton" onclick="saveImage()">Save Image</button>
+            <button id="disconnectButton" onclick="disconnect()">Shutdown</button>
+        </div>
+        <div id="console" class="console"> </div>
+    </div>
+
+    <script>
+        function saveImage() {
+            fetch('/capture')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    showMessage(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function disconnect() {
+            fetch('/disconnect')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    showMessage(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function iExposureTime() {
+            fetch('/iExposureTime')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    showMessage(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function dExposureTime() {
+            fetch('/dExposureTime')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    showMessage(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function start_stop() {
+            fetch('/start_stop')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    updateButton(data);
+                    showMessage(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function updateButton(state) {
+            const button = document.getElementById('startButton');
+            //const message = document.getElementById('message');
+            if (state === 'Start') {
+                button.textContent = 'Stop';
+            } else {
+                button.textContent = 'Start';
+            }
+        }
+        function showMessage(message) {
+            const consoleDiv = document.getElementById('console');
+            const p = document.createElement('p');
+            p.textContent = message;
+            consoleDiv.appendChild(p);
+        }
+    </script>
+</body>
+
+</html>
