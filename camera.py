@@ -124,7 +124,7 @@ class Camera:
             # Set Pixel format to 8 bits
             gen_type, pixel_format = self.GetParameter("PixelFormat", dp)
             if pixel_format is None:
-                return print(gen_type)
+                return None
 
             self._output_format = re.search(r"\D+", pixel_format).group()
             channel_size = int(
@@ -230,7 +230,6 @@ class Camera:
         # Abort all buffers from the stream and dequeue
         self._stream.AbortQueuedBuffers()
         while self._stream.GetQueuedBufferCount() > 0:
-            print("hello")
             result, buffer, lOperationalResult = self._stream.RetrieveBuffer()
 
     # Public
